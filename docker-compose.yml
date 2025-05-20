@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: brighte
+      POSTGRES_PASSWORD: brightepass
+      POSTGRES_DB: brighte_eats
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    build: .
+    restart: always
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: brighte
+      DB_PASSWORD: brightepass
+      DB_NAME: brighte_eats
+      NODE_ENV: development
+    ports:
+      - "4000:4000"
+    command: npm run start
+
+volumes:
+  pgdata:
