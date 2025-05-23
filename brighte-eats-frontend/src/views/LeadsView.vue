@@ -6,7 +6,7 @@
     <div v-else-if="error">Error loading leads: {{ error.message }}</div>
 
     <ul v-else>
-      <li v-for="lead in leads" :key="lead.id" class="mb-4 p-4 border rounded">
+      <li v-for="lead in leads" :key="lead.id" class="text-gray-700 max-w-md mt-10 bg-white shadow-md rounded-lg p-6">
         <p><strong>Name:</strong> {{ lead.name }}</p>
         <p><strong>Email:</strong> {{ lead.email }}</p>
         <p><strong>Mobile:</strong> {{ lead.mobile }}</p>
