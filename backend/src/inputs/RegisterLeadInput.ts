@@ -1,6 +1,6 @@
 import { InputType, Field } from 'type-graphql';
 import { IsEmail, IsNotEmpty, ArrayNotEmpty } from 'class-validator';
-
+import 'reflect-metadata';
 @InputType()
 export class RegisterLeadInput {
   @Field()
