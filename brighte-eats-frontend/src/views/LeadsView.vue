@@ -11,8 +11,20 @@
         <p><strong>Email:</strong> {{ lead.email }}</p>
         <p><strong>Mobile:</strong> {{ lead.mobile }}</p>
         <p><strong>Postcode:</strong> {{ lead.postcode }}</p>
-        <p><strong>Services:</strong> {{ lead.services }}</p>
-        <p><small>{{ new Date(lead.createdAt).toLocaleString() }}</small></p>
+        <p><strong>Services:</strong></p>
+        <div class="flex flex-wrap gap-2 mt-1">
+          <span
+            v-for="(service, index) in lead.services"
+            :key="index"
+            class="px-3 py-1 text-sm rounded-full text-white"
+            :class="getServiceColor(service)"
+          >
+            {{ service }}
+          </span>
+        </div>
+        <p class="mt-4 text-sm text-gray-500">
+          {{ new Date(lead.createdAt).toLocaleString() }}
+        </p>
       </li>
     </ul>
   </div>
@@ -40,4 +52,17 @@ const GET_LEADS = gql`
 const { result, loading, error } = useQuery(GET_LEADS)
 
 const leads = computed(() => result.value?.leads ?? [])
+
+const getServiceColor = (service: string) => {
+  switch (service.toLowerCase()) {
+    case 'delivery':
+      return 'bg-blue-600';
+    case 'pick-up':
+      return 'bg-green-600';
+    case 'payment':
+      return 'bg-red-600';
+    default:
+      return 'bg-gray-600';
+  }
+}
 </script>
