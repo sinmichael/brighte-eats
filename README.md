@@ -72,6 +72,25 @@ mutation RegisterLead($input: RegisterLeadInput!) {
 
 ---
 
+## Running Tests (Backend)
+
+Ensure you have installed the project dependencies
+
+```bash
+npm install
+```
+
+Use the following command to run all tests:
+
+```
+npm test
+```
+
+We use **Jest** for testing and **ts-jest** for TypeScript support.
+Entity and database operations are mocked to keep tests fast and isolated.
+
+---
+
 ## Frontend Setup (Manual)
 
 ```bash
