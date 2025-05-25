@@ -3,7 +3,7 @@ import { LeadResolver } from '../../src/resolvers/LeadResolver';
 import { RegisterLeadInput } from '../../src/inputs/RegisterLeadInput';
 import { Lead } from '../../src/entities/Lead';
 import { validateOrReject } from 'class-validator';
-
+import { ValidationError } from 'class-validator';
 
 jest.mock('../../src/utils/database', () => {
   const mockLeadRepository = {
@@ -113,5 +113,63 @@ describe('LeadResolver', () => {
 
     expect(__mockLeadRepository.findOneBy).toHaveBeenCalledWith({ id: 1 });
     expect(result).toEqual(mockLead);
+  });
+
+  it('should throw validation error when input is invalid', async () => {
+    const input: RegisterLeadInput = {
+      name: '', // Invalid: empty name
+      email: 'not-an-email', // Invalid: not a valid email
+      mobile: 'invalid-phone', // Invalid format
+      postcode: '', // Required field missing
+      services: [], // Usually expected to have at least one service
+    };
+
+    const validationErrors: ValidationError[] = [
+      {
+        property: 'name',
+        constraints: { isNotEmpty: 'name should not be empty' },
+        children: [],
+      },
+      {
+        property: 'email',
+        constraints: { isEmail: 'email must be an email' },
+        children: [],
+      },
+      {
+        property: 'mobile',
+        constraints: { matches: 'mobile must match /^[0-9]{10}$/' },
+        children: [],
+      },
+    ];
+
+    mockedValidateOrReject.mockRejectedValue(validationErrors);
+
+    await expect(resolver.register(input)).rejects.toEqual(validationErrors);
+
+    expect(validateOrReject).toHaveBeenCalledWith(input);
+    expect(Lead.create).not.toHaveBeenCalled();
+  });
+
+  it('should not save if validation fails', async () => {
+    const input: RegisterLeadInput = {
+      name: '',
+      email: '',
+      mobile: '',
+      postcode: '',
+      services: [],
+    };
+
+    mockedValidateOrReject.mockRejectedValue([
+      {
+        property: 'name',
+        constraints: { isNotEmpty: 'name should not be empty' },
+        children: [],
+      },
+    ]);
+
+    await expect(resolver.register(input)).rejects.toBeDefined();
+
+    expect(Lead.create).not.toHaveBeenCalled();
+    expect(__mockLeadRepository.save).not.toHaveBeenCalled();
   });
 });
