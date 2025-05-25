@@ -36,10 +36,14 @@
       </div>
       <div>
         <label class="block text-sm font-medium text-gray-700">Services</label>
-        <textarea
-          v-model="form.services"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-        ></textarea>
+          <input type="checkbox" id="delivery" value="delivery" v-model="form.services" />
+          <label for="delivery" class="text-gray-700 ml-1 mr-4">Delivery</label>
+
+          <input type="checkbox" id="pick-up" value="pick-up" v-model="form.services" />
+          <label for="pick-up" class="text-gray-700 ml-1 mr-4">Pick-Up</label>
+
+          <input type="checkbox" id="payment" value="payment" v-model="form.services" />
+          <label for="payment" class="text-gray-700 ml-1 mr-4">Payment</label>
       </div>
       <button
         type="submit"
@@ -76,7 +80,7 @@ const form = ref({
   email: '',
   mobile: '',
   postcode: '',
-  services: '',
+  services: [],
 });
 
 const successMessage = ref('');
@@ -92,7 +96,7 @@ onDone(() => {
     email: '',
     mobile: '',
     postcode: '',
-    services: '',
+    services: [],
   };
 });
 
